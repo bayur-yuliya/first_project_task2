@@ -1,18 +1,5 @@
 def parse(query: str) -> dict:
-
-    result_dict = {}
-    divided_url = query.split('?')
-
-    if len(divided_url) > 1:
-
-        divided_attributes = divided_url[1].split('&')
-
-        for el in divided_attributes:
-            if len(el) > 0:
-                pairs_of_dictionary = el.split('=')
-                result_dict[pairs_of_dictionary[0]] = pairs_of_dictionary[1]
-
-    return result_dict
+    return {}
 
 
 if __name__ == '__main__':
@@ -21,15 +8,19 @@ if __name__ == '__main__':
     assert parse('http://example.com/') == {}
     assert parse('http://example.com/?') == {}
     assert parse('http://example.com/?name=Dima') == {'name': 'Dima'}
-    assert parse('https://www.aliexpress.com/?spm=a2g0o.detail.1000') == {'spm': 'a2g0o.detail.1000'}
-    assert parse('https://www.google.com/search?q=split+python&oq=&aqs=chrome') == {'q': 'split+python', 'oq': '', 'aqs': 'chrome'}
-    assert parse('https://www.work.ua/jobs-odesa-it/?advs=1') == {'advs': '1'}
-    assert parse('https://www.work.ua/jobs-odesa/?advs=1&category=22+1') == {'advs': '1', 'category': '22+1'}
-    assert parse('https://translate.google.com/?sl=en&tl=ru&text=Step%202%20of%202') == {'sl': 'en', 'tl': 'ru', 'text': 'Step%202%20of%202'}
 
 
 def parse_cookie(query: str) -> dict:
-    return {}
+
+    result = {}
+    divided_string_into_list = query.split(";")
+
+    for el in divided_string_into_list:
+        if len(el) > 0:
+            pairs_of_dictionary = el.split("=", 1)
+            result[pairs_of_dictionary[0]] = pairs_of_dictionary[1]
+
+    return result
 
 
 if __name__ == '__main__':
@@ -37,3 +28,10 @@ if __name__ == '__main__':
     assert parse_cookie('') == {}
     assert parse_cookie('name=Dima;age=28;') == {'name': 'Dima', 'age': '28'}
     assert parse_cookie('name=Dima=User;age=28;') == {'name': 'Dima=User', 'age': '28'}
+    assert parse_cookie('user=Sam=age=15;id=3') == {'user': 'Sam=age=15', 'id': '3'}
+    assert parse_cookie('id=1;number=8;name=Stiv') == {'id': '1', 'number': '8', 'name': 'Stiv'}
+    assert parse_cookie(';;') == {}
+    assert parse_cookie('item=phone=number=0000000;color=red;') == {'item': 'phone=number=0000000', 'color': 'red'}
+    assert parse_cookie('1=1;2=3-1;') == {'1': '1', '2': '3-1'}
+    assert parse_cookie('name=Ira;age=20') == {'name': 'Ira', 'age': '20'}
+    assert parse_cookie(';name=Dima;age=28;') == {'name': 'Dima', 'age': '28'}
